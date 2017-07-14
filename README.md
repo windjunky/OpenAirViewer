@@ -1,8 +1,13 @@
 OpenAir Viewer
 
-von BuVo - Burkhard Vogt, Münster i. Westf.
+Erstellt von: 
+Burkhard Vogt, Münster i. Westf.
 http://bitbroker.eu
-Kontakt über bvogt()muenster.de
+bvogt()muenster.de
+
+Pflege und Weiterentwicklung:
+Ronny Schmidt, Altes Lager
+schmidt.ronny()gmail.com
 
 Version 1.0.1 vom 28. Juni 2017
 
@@ -12,7 +17,7 @@ Diese Software unterliegt deutschem Recht. Es wird ausdrücklich darauf hingewie
 
 Funktion:
 
-OAV dient einfach nur der einfachen graphischen Darstellung einer Datei im OpenAir Format. Ich habe das Programm mit verschiedenen OpenAir Dateien ausprobiert, welche im Internet zu finden sind. Ob alle Features dieser Beschreibungssprache unterstützt werden kann ich nicht beurteilen!
+OAV dient einfach nur der einfachen graphischen Darstellung einer Datei im OpenAir Format. Ich habe das Programm mit verschiedenen OpenAir Dateien ausprobiert, welche im Internet zu finden sind. Ob alle Features unterstützt werden, kann ich nicht beurteilen!
 
 Ideen: 
 - freies Plazieren von Linien, Kreisen oder Kreisbögen
@@ -21,5 +26,5 @@ Ideen:
 Installationshinweis:
 OAV legt keine Registrierschlüssel ab oder verwendet sonstige Betriebssysteminformationen. Somit kann OAV in einen beliebigen Ordner kopiert und ohne Installation etc. ausgeführt werden. OAV wurde mit der IDE "PELLES C für Windows V8.00.60" erstellt.
 
-Ich wünsche viel Spaß mit dem Programm OAV
-Burkhard Vogt
+Wir wünschen viel Spaß mit dem Programm OAV
+Ronny Schmidt & Burkhard Vogt
