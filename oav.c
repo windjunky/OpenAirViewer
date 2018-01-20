@@ -23,6 +23,16 @@
 #define IBOXS2		250
 #define IBOXB		IBOXS1+IBOXS2+5
 
+
+#define OA_TYP_FILE   	 0
+#define OA_TYP_AREA   	 1	
+#define OA_TYP_POINT  	 2
+#define OA_TYP_CIRCLE    3
+#define OA_TYP_ARC       4
+
+#define OA_ROT_DIR_RIGHT 0
+#define OA_ROT_DIR_LEFT  1
+
 /** Prototypes **************************************************************/
 
 LRESULT WINAPI WndProc ( HWND, UINT, WPARAM, LPARAM );
@@ -48,7 +58,7 @@ TV_INSERTSTRUCT  sTvins;
 
 struct strContainer
 {
-	BYTE   bTyp;				// 0 = File / 1 = Area / 2 = Point / 3 = Circle
+	BYTE   bTyp;				// 0 = File / 1 = Area / 2 = Point / 3 = Circle / 4 = Arc
 	DWORD  dwIndex;				// Index nach Typ
 	HANDLE hParent;
 };
@@ -76,7 +86,7 @@ struct strPoint *sPoint = NULL;
 
 struct strCircle
 {
-	BYTE   bTyp;				// Drehrichtung
+	BYTE   bRotDir;				// Drehrichtung 0 - rechts, 1 - links
 	DWORD  dwArea;				// Index der Area
 	float  fRad;
 	float  fLatM, fLonM;
@@ -96,7 +106,6 @@ char *pStrings = NULL;
  * Purpose : RTF support function                                           *
  *                                                                          *
  ****************************************************************************/
-
 static DWORD EditStreamCallback ( DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb )
 {
 	char    szResIdStr[32];
@@ -154,6 +163,7 @@ static DWORD EditStreamCallback ( DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LO
 	}
 	return 1;
 }
+
 static DWORD LoadRtfResource ( HWND hwndRichEdit, int iResID )
 {
 	EDITSTREAM es;
@@ -169,7 +179,6 @@ static DWORD LoadRtfResource ( HWND hwndRichEdit, int iResID )
 	return es.dwError;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: HelpDlgProc                                                    *
@@ -177,7 +186,6 @@ static DWORD LoadRtfResource ( HWND hwndRichEdit, int iResID )
  * Aufgabe : Help Dialog ausgeben mit RichText                              *
  *                                                                          *
  ****************************************************************************/
-
 LRESULT CALLBACK HlpDlgProc ( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
     switch ( uMsg )
@@ -209,7 +217,6 @@ LRESULT CALLBACK HlpDlgProc ( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
  * Aufgabe : Fensterklasse registrieren                                     *
  *                                                                          *
  ****************************************************************************/
-
 int PASCAL WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	                 LPSTR lpCmdLine, int nCmdShow)
 {
@@ -258,7 +265,6 @@ int PASCAL WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	 return msg.wParam;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: ReadString                                                    	*
@@ -266,7 +272,6 @@ int PASCAL WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstance,
  * Aufgabe : Speichert einen String und gibt den Pointer darauf zurück		*
  *                                                                          *
  ****************************************************************************/
-
 DWORD ReadString ( char *szString )
 {
 	DWORD dwLen = strlen ( szString ) + 1;
@@ -286,7 +291,6 @@ DWORD ReadString ( char *szString )
 	return ( dwPos );
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: ReadKoor                                                    	*
@@ -294,7 +298,6 @@ DWORD ReadString ( char *szString )
  * Aufgabe : Liste eine Koordinate											*
  *                                                                          *
  ****************************************************************************/
-
 float ReadKoor ( char *pString )
 {
 	char *pPtr = pString;
@@ -323,7 +326,6 @@ float ReadKoor ( char *pString )
 	return ( 0.0 );
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: SetMax                                                      	*
@@ -331,7 +333,6 @@ float ReadKoor ( char *pString )
  * Aufgabe : Set die Maximalwerte (oder Startwert)							*
  *                                                                          *
  ****************************************************************************/
-
 void SetMax ( float fLat, float fLon, float fRad )
 {
 	if ( ! sArea[dwAreaZ-1].dwElemAnz )
@@ -363,7 +364,6 @@ void SetMax ( float fLat, float fLon, float fRad )
 	return;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: Dist                                                       	*
@@ -371,12 +371,10 @@ void SetMax ( float fLat, float fLon, float fRad )
  * Aufgabe : Berechnet eine Distanz											*
  *                                                                          *
  ****************************************************************************/
-
 float Dist ( float fX, float fY )
 {
 	return ( sqrt ( fX * fX + fY * fY ) );
 }
-
 
 /****************************************************************************
  *                                                                          *
@@ -385,15 +383,14 @@ float Dist ( float fX, float fY )
  * Aufgabe : Liest die OpenAirDatei                                    		*
  *                                                                          *
  ****************************************************************************/
-
 void ReadOAFile ( char *szFile )
 {
 	char   szBuffer[256];
 	FILE  *pFile;
-	DWORD  dwAktArea;
+	DWORD  dwAktArea = 0;
 	BOOL   bNewArea = TRUE, bNewPoint = TRUE;
-	BOOL   bCircleDir;
-	float  fCircleLon, fCircleLat;
+	BOOL   bRotDir = OA_ROT_DIR_LEFT;
+	float  fCircleLon = 52.0, fCircleLat = 13.0;
 
 	TreeView_SelectItem ( hWndTV, 0 );
   
@@ -432,7 +429,7 @@ void ReadOAFile ( char *szFile )
 	sTvins.item.pszText        = strrchr ( szFile, '\\' ) + 1;
 	sTvins.item.iImage         = 1;
 
-	sCont[0].bTyp    = 0;
+	sCont[0].bTyp    = OA_TYP_FILE;
 	sCont[0].hParent = TreeView_InsertItem ( hWndTV, &sTvins );
 
 	dwContZ = 1;
@@ -454,7 +451,7 @@ void ReadOAFile ( char *szFile )
 					bNewArea   = FALSE;
 					bNewPoint  = TRUE;
 
-					bCircleDir = FALSE;
+					bRotDir = OA_ROT_DIR_RIGHT;
 				}
 
 				switch ( szBuffer[1] )
@@ -491,7 +488,7 @@ void ReadOAFile ( char *szFile )
 
 			}
 
-			case 'D':							// Points and Circles
+			case 'D':							// Area, Point, Circle, Arc starten mit D
 			{
 				if ( ! bNewArea )
 				{
@@ -507,7 +504,7 @@ void ReadOAFile ( char *szFile )
 
 					sCont = realloc ( sCont, ( dwContZ ) * sizeof ( struct strContainer ) );
 
-					sCont[dwAktArea].bTyp    = 1;
+					sCont[dwAktArea].bTyp    = OA_TYP_AREA;
 					sCont[dwAktArea].dwIndex = dwAreaZ;
 					sCont[dwAktArea].hParent = TreeView_InsertItem ( hWndTV, &sTvins );
 
@@ -518,15 +515,15 @@ void ReadOAFile ( char *szFile )
 
 				switch ( szBuffer[1] )
 				{
-					case 'A':							// DA ArcCircle
+					case 'A':							// DA Kreisbogen mit Winkeln
 					{
 						float fWinkel;
 
 						sCircle = realloc ( sCircle, ( dwCircleZ + 1 ) * sizeof ( struct strCircle ) );
 
-						sCircle[dwCircleZ].bTyp   = bCircleDir;
-						sCircle[dwCircleZ].dwArea = dwAktArea;
-						sCircle[dwCircleZ].fRad   = atof ( strtok ( szBuffer + 3, " :,\n" ) ) / 60.0;
+						sCircle[dwCircleZ].bRotDir = bRotDir;
+						sCircle[dwCircleZ].dwArea  = dwAktArea;
+						sCircle[dwCircleZ].fRad    = atof ( strtok ( szBuffer + 3, " :,\n" ) ) / 60.0;
 
 						fWinkel = atof ( strtok ( szBuffer + 3, " :,\n" ) ) / RHO;
 
@@ -542,7 +539,7 @@ void ReadOAFile ( char *szFile )
 
 						char szBuffer[18];
 
-						sprintf ( szBuffer, "%03lu Kreis", sArea[dwAreaZ-1].dwElemAnz + 1 );
+						sprintf ( szBuffer, "%03lu Kreisbogen", sArea[dwAreaZ-1].dwElemAnz + 1 );
 
 						sTvins.hParent		       = sCont[dwAktArea].hParent;
 						sTvins.item.lParam         = dwContZ;		
@@ -552,7 +549,7 @@ void ReadOAFile ( char *szFile )
 
 						sCont = realloc ( sCont, ( dwContZ + 1 ) * sizeof ( struct strContainer ) );
 						
-						sCont[dwContZ].bTyp    = 3;
+						sCont[dwContZ].bTyp    = OA_TYP_ARC;
 						sCont[dwContZ].dwIndex = dwCircleZ;
 						sCont[dwContZ].hParent = TreeView_InsertItem ( hWndTV, &sTvins );
 
@@ -568,12 +565,12 @@ void ReadOAFile ( char *szFile )
 						break;
 					}
 
-					case 'B':							// DB ArcCircle
+					case 'B':							// DB Kreisbogen mit Koordinaten
 					{
 						sCircle = realloc ( sCircle, ( dwCircleZ + 1 ) * sizeof ( struct strCircle ) );
 
-						sCircle[dwCircleZ].bTyp   = bCircleDir;
-						sCircle[dwCircleZ].dwArea = dwAktArea;
+						sCircle[dwCircleZ].bRotDir = bRotDir;
+						sCircle[dwCircleZ].dwArea  = dwAktArea;
 
 						float fCos = cos ( fCircleLat / RHO );
 
@@ -600,7 +597,7 @@ void ReadOAFile ( char *szFile )
 
 						sCont = realloc ( sCont, ( dwContZ + 1 ) * sizeof ( struct strContainer ) );
 						
-						sCont[dwContZ].bTyp    = 3;
+						sCont[dwContZ].bTyp    = OA_TYP_ARC;
 						sCont[dwContZ].dwIndex = dwCircleZ;
 						sCont[dwContZ].hParent = TreeView_InsertItem ( hWndTV, &sTvins );
 
@@ -616,7 +613,7 @@ void ReadOAFile ( char *szFile )
 						break;
 					}
 
-					case 'C':							// DC Full circle
+					case 'C':							// DC Vollkreis
 					{
 						sCircle = realloc ( sCircle, ( dwCircleZ + 1 ) * sizeof ( struct strCircle ) );
 
@@ -637,7 +634,7 @@ void ReadOAFile ( char *szFile )
 
 						sCont = realloc ( sCont, ( dwContZ + 1 ) * sizeof ( struct strContainer ) );
 						
-						sCont[dwContZ].bTyp    = 4;
+						sCont[dwContZ].bTyp    = OA_TYP_CIRCLE;
 						sCont[dwContZ].dwIndex = dwCircleZ;
 						sCont[dwContZ].hParent = TreeView_InsertItem ( hWndTV, &sTvins );
 
@@ -682,7 +679,7 @@ void ReadOAFile ( char *szFile )
 
 						sCont = realloc ( sCont, ( dwContZ + 1 ) * sizeof ( struct strContainer ) );
 						
-						sCont[dwContZ].bTyp    = 2;
+						sCont[dwContZ].bTyp    = OA_TYP_POINT;
 						sCont[dwContZ].dwIndex = dwPointZ;
 						sCont[dwContZ].hParent = TreeView_InsertItem ( hWndTV, &sTvins );
 
@@ -712,11 +709,11 @@ void ReadOAFile ( char *szFile )
 					{
 						if ( pPtr[2] == '-' ) 
 						{	
-							bCircleDir = TRUE;
+							bRotDir = OA_ROT_DIR_LEFT;
 					    }
 						else if ( pPtr[2] == '+' )
 					    {
-                            bCircleDir = FALSE;
+                            bRotDir = OA_ROT_DIR_RIGHT;
 						}
 					}
 					else if ( *pPtr == 'X' || *pPtr == 'x' )
@@ -761,7 +758,6 @@ void ReadOAFile ( char *szFile )
 	return;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: InsertItem                                                    	*
@@ -769,7 +765,6 @@ void ReadOAFile ( char *szFile )
  * Aufgabe : List Fenster füllen                                       		*
  *                                                                          *
  ****************************************************************************/
-
 void InsertItem ( int nItem, char *szInfo, char *szString )
 {
 	if ( nItem == 0 ) ListView_DeleteAllItems ( hWndLV );
@@ -789,7 +784,6 @@ void InsertItem ( int nItem, char *szInfo, char *szString )
 	return;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: TextPosOut                                                    	*
@@ -797,7 +791,6 @@ void InsertItem ( int nItem, char *szInfo, char *szString )
  * Aufgabe : Einen Text positioniert ausgeben                          		*
  *                                                                          *
  ****************************************************************************/
-
 void TextPosOut ( HDC hDC, int nX, int nY, int nMidX, int nMidY, DWORD dwE )
 {
 #define OFFSET 2
@@ -841,7 +834,6 @@ void TextPosOut ( HDC hDC, int nX, int nY, int nMidX, int nMidY, DWORD dwE )
 	return;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: ViewArea	                                                  	*
@@ -849,13 +841,12 @@ void TextPosOut ( HDC hDC, int nX, int nY, int nMidX, int nMidY, DWORD dwE )
  * Aufgabe : Darstellungsroutine einer Fläche                          		*
  *                                                                          *
  ****************************************************************************/
-
 void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark )
 {
 	DWORD dwE;
 
 	BOOL  bStart = FALSE;
-	int	  nXs, nYs;
+	int	  nXs = 0, nYs = 0;
 
 	for ( dwE=0; dwE<sArea[dwIndex].dwElemAnz; dwE++ )
 	{
@@ -863,7 +854,7 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark )
 
 		switch ( sCont[sArea[dwIndex].dwElemIdx+dwE].bTyp )
 		{
-			case 2:
+			case OA_TYP_POINT:
 			{
 				int nX = nMidX + ( sPoint[dwIdx].fLon - fMidLon ) / fDivLon;
 				int nY = nMidY - ( sPoint[dwIdx].fLat - fMidLat ) / fDivLat;
@@ -903,7 +894,7 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark )
 				break;
 			}
 
-			case 3:
+			case OA_TYP_ARC:
 			{
 				int nXm = nMidX + ( sCircle[dwIdx].fLonM - fMidLon ) / fDivLon;
 				int nYm = nMidY - ( sCircle[dwIdx].fLatM - fMidLat ) / fDivLat;
@@ -913,7 +904,7 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark )
 				int nXe = nMidX + ( sCircle[dwIdx].fLonE - fMidLon ) / fDivLon;
 				int nYe = nMidY - ( sCircle[dwIdx].fLatE - fMidLat ) / fDivLat;
 
-				if ( sCircle[dwIdx].bTyp )
+				if ( OA_ROT_DIR_LEFT == sCircle[dwIdx].bRotDir )
 				{
 					SetArcDirection ( hDC, AD_COUNTERCLOCKWISE );
 				}
@@ -921,7 +912,6 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark )
 				{
 					SetArcDirection ( hDC, AD_CLOCKWISE );
 				}
-
 
 				if ( ! bStart )
 				{
@@ -956,7 +946,7 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark )
 				break;
 			}
 
-			case 4:
+			case OA_TYP_CIRCLE:
 			{
 				int nX = nMidX + ( sCircle[dwIdx].fLonM - fMidLon ) / fDivLon;
 				int nY = nMidY - ( sCircle[dwIdx].fLatM - fMidLat ) / fDivLat;
@@ -1000,7 +990,6 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark )
  * Aufgabe : Die Darstellungsroutine                                   		*
  *                                                                          *
  ****************************************************************************/
-
 void View ( HWND hWnd )
 {
 	PAINTSTRUCT	pS;
@@ -1042,7 +1031,7 @@ void View ( HWND hWnd )
 
 	switch ( sCont[dwContSel].bTyp )
 	{
-		case 0:
+		case OA_TYP_FILE:
 		{
 			float fDelLat = fLatMax - fLatMin;
 			float fDelLon = fLonMax - fLonMin;
@@ -1062,7 +1051,7 @@ void View ( HWND hWnd )
 			break;
 		}
 
-		case 1:
+		case OA_TYP_AREA:
 		{
 			DWORD dwIndex = sCont[dwContSel].dwIndex;
 
@@ -1082,7 +1071,7 @@ void View ( HWND hWnd )
 			break;
 		}
 
-		case 2:
+		case OA_TYP_POINT:
 		{
 			DWORD dwElem  = sCont[dwContSel].dwIndex;
 			DWORD dwCont  = sPoint[dwElem].dwArea;
@@ -1104,8 +1093,8 @@ void View ( HWND hWnd )
 			break;
 		}
 
-		case 3:
-		case 4:
+		case OA_TYP_CIRCLE:
+		case OA_TYP_ARC:
 		{
 			DWORD dwElem  = sCont[dwContSel].dwIndex;
 			DWORD dwCont  = sCircle[dwElem].dwArea;
@@ -1135,7 +1124,6 @@ void View ( HWND hWnd )
 	return;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: ShowInfo                                                    	*
@@ -1143,14 +1131,13 @@ void View ( HWND hWnd )
  * Aufgabe : Zeigt die Infos eines Contents                            		*
  *                                                                          *
  ****************************************************************************/
-
 void ShowInfo ( BYTE bTyp, DWORD dwIndex )
 {
 	char szBuffer[30];
 
 	switch ( bTyp )
 	{
-		case 0:
+		case OA_TYP_FILE:
 		{
 			sprintf ( szBuffer, "%lu", dwAreaZ );
 
@@ -1167,7 +1154,7 @@ void ShowInfo ( BYTE bTyp, DWORD dwIndex )
 			return;
 		}
 
-		case 1:
+		case OA_TYP_AREA: // Fläche
 		{
 			InsertItem ( 0, "Name", pStrings + sArea[dwIndex].dwName );
 
@@ -1192,7 +1179,7 @@ void ShowInfo ( BYTE bTyp, DWORD dwIndex )
 			return;
 		}
 
-		case 2:
+		case OA_TYP_POINT: // Punkt
 		{
 			InsertItem ( 0, "Typ", "Punkt" );
 
@@ -1207,17 +1194,18 @@ void ShowInfo ( BYTE bTyp, DWORD dwIndex )
 			return;
 		}
 
-		case 3:
+		case OA_TYP_ARC: // Kreisbogen
 		{
 			sprintf ( szBuffer, "%7.4f", sCircle[dwIndex].fRad * 60.0 );
 
-			if ( sCircle[dwIndex].bTyp )
-
+			if ( OA_ROT_DIR_LEFT == sCircle[dwIndex].bRotDir )
+			{
 				strcat ( szBuffer, " links" );
-
+			}
 			else
-
+			{		
 				strcat ( szBuffer, " rechts" );
+			}
 
 			strcat ( szBuffer, "drehend" );
 
@@ -1250,7 +1238,7 @@ void ShowInfo ( BYTE bTyp, DWORD dwIndex )
 			return;
 		}
 
-		case 4:
+		case OA_TYP_CIRCLE: // Kreis
 		{
 			sprintf ( szBuffer, "%7.4f", sCircle[dwIndex].fRad * 60.0 );
 
@@ -1278,7 +1266,6 @@ void ShowInfo ( BYTE bTyp, DWORD dwIndex )
  * Aufgabe : Das MainFenster                                          		*
  *                                                                          *
  ****************************************************************************/
-
 LRESULT WINAPI WndProc ( HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam )
 {
 	LV_COLUMN lvc;
@@ -1388,7 +1375,6 @@ LRESULT WINAPI WndProc ( HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam )
 			}
 			return 0;
 		}
-
 
 		case WM_CREATE:
 			
