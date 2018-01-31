@@ -1,0 +1,364 @@
+ oav.EXE
+
+ Timestamp is 5a72111a (Wed Jan 31 19:55:22 2018)
+
+ Preferred load address is 00400000
+
+ Start         Length     Name                   Class
+ 0001:00000000 00009e36H .text                   CODE
+ 0002:00000000 000013ccH .rdata                  DATA
+ 0003:00000000 000008dcH .data                   DATA
+ 0003:000008dc 00000078H .idata$2                DATA
+ 0003:00000954 00000014H .idata$3                DATA
+ 0003:00000968 00000184H .idata$4                DATA
+ 0003:00000aec 00000184H .idata$5                DATA
+ 0003:00000c70 00000602H .idata$6                DATA
+ 0003:00001274 0000061cH .bss                    DATA
+ 0004:00000000 00001ed8H .rsrc                   DATA
+
+  Address         Publics by Value              Rva+Base     Lib:Object
+
+ 0000:00000000       __except_list              00000000     <absolute>
+ 0001:00000180       _HlpDlgProc@16             00401180 f   oav.OBJ
+ 0001:000001e0       _WinMain@16                004011e0 f   oav.OBJ
+ 0001:00000330       _ReadString@4              00401330 f   oav.OBJ
+ 0001:000003b0       _ReadKoor@4                004013b0 f   oav.OBJ
+ 0001:00000470       _SetMax@12                 00401470 f   oav.OBJ
+ 0001:00000550       _Dist@8                    00401550 f   oav.OBJ
+ 0001:00000590       _ReadOAFile@4              00401590 f   oav.OBJ
+ 0001:00001440       _InsertItem@12             00402440 f   oav.OBJ
+ 0001:000014d0       _TextPosOut@24             004024d0 f   oav.OBJ
+ 0001:00001550       _ViewArea@20               00402550 f   oav.OBJ
+ 0001:00001af0       _View@4                    00402af0 f   oav.OBJ
+ 0001:00001fc0       _ShowInfo@8                00402fc0 f   oav.OBJ
+ 0001:00002400       _WndProc@16                00403400 f   oav.OBJ
+ 0001:00002880       _sprintf                   00403880 f   crt:sprintf.obj
+ 0001:000028b0       __sheap_realloc            004038b0 f   crt:realloc.obj
+ 0001:00002c50       _realloc                   00403c50 f   crt:realloc.obj
+ 0001:00002d70       _strtok                    00403d70 f   crt:strtok.obj
+ 0001:00002dc0       _strchr                    00403dc0 f   crt:strchr.obj
+ 0001:00002e90       ___stod                    00403e90 f   crt:_stod.obj
+ 0001:00003030       _sqrt                      00404030 f   crt:sqrt.obj
+ 0001:00003050       _sqrtf                     00404050 f   crt:sqrt.obj
+ 0001:00003070       _sqrtl                     00404070 f   crt:sqrt.obj
+ 0001:00003090       _fopen                     00404090 f   crt:fopen.obj
+ 0001:000030c0       __sheap_free               004040c0 f   crt:free.obj
+ 0001:00003440       _free                      00404440 f   crt:free.obj
+ 0001:00003680       __sheap_alloc              00404680 f   crt:malloc.obj
+ 0001:00003990       _malloc                    00404990 f   crt:malloc.obj
+ 0001:000039d0       _strrchr                   004049d0 f   crt:strrchr.obj
+ 0001:000039f0       _fgets                     004049f0 f   crt:fgets.obj
+ 0001:00003b20       ___sin                     00404b20 f   crt:_sin.obj
+ 0001:00003d20       _feof                      00404d20 f   crt:feof.obj
+ 0001:00003d60       ___init_closeall           00404d60 f   crt:fclose.obj
+ 0001:00003d80       _fclose                    00404d80 f   crt:fclose.obj
+ 0001:00003e80       _strncmp                   00404e80 f   crt:strncmp.obj
+ 0001:00003ec0       ___ftoll                   00404ec0 f   crt:_ftoll.obj
+ 0001:00003ef0       _strcat                    00404ef0 f   crt:strcat.obj
+ 0001:00003f20       _WinMainCRTStartup         00404f20 f   crt:_wincrt0.obj
+ 0001:00004040       ___printf                  00405040 f   crt:_printf.obj
+ 0001:000042b0       ___bheapinit               004052b0 f   crt:_bigheap.obj
+ 0001:000042d0       ___bheapterm               004052d0 f   crt:_bigheap.obj
+ 0001:000042f0       __bheap_aligned_alloc      004052f0 f   crt:_bigheap.obj
+ 0001:00004350       __bheap_aligned_realloc    00405350 f   crt:_bigheap.obj
+ 0001:00004430       __bheap_alloc              00405430 f   crt:_bigheap.obj
+ 0001:00004440       __bheap_realloc            00405440 f   crt:_bigheap.obj
+ 0001:00004460       __bheap_free               00405460 f   crt:_bigheap.obj
+ 0001:00004480       __bheap_size               00405480 f   crt:_bigheap.obj
+ 0001:000044b0       __bheap_validate           004054b0 f   crt:_bigheap.obj
+ 0001:000044e0       __sheap_size               004054e0 f   crt:msize.obj
+ 0001:00004510       __msize                    00405510 f   crt:msize.obj
+ 0001:00004550       _strspn                    00405550 f   crt:strspn.obj
+ 0001:000045d0       _strcspn                   004055d0 f   crt:strcspn.obj
+ 0001:00004650       ___stopfx                  00405650 f   crt:_stopfx.obj
+ 0001:00004790       ___stoflt                  00405790 f   crt:_stoflt.obj
+ 0001:000049e0       ___fppow10                 004059e0 f   crt:_fppow10.obj
+ 0001:00004b60       ___stoxflt                 00405b60 f   crt:_stoxflt.obj
+ 0001:00004da0       ___fpscale                 00405da0 f   crt:_fpscale.obj
+ 0001:00004f70       __matherr                  00405f70 f   crt:_matherr.obj
+ 0001:00004f80       ___feraise                 00405f80 f   crt:_feraise.obj
+ 0001:00004fc0       ___fslot                   00405fc0 f   crt:_fslot.obj
+ 0001:00005050       ___fopen                   00406050 f   crt:_fopen.obj
+ 0001:00005190       ___getmem                  00406190 f   crt:_getmem.obj
+ 0001:00005230       ___fread                   00406230 f   crt:_fread.obj
+ 0001:00005360       _memchr                    00406360 f   crt:memchr.obj
+ 0001:00005420       ___fptest                  00406420 f   crt:_fptest.obj
+ 0001:00005480       _fmod                      00406480 f   crt:fmod.obj
+ 0001:000055f0       __Atexit                   004065f0 f   crt:_atexit.obj
+ 0001:00005620       ___fflush                  00406620 f   crt:_fflush.obj
+ 0001:000056f0       __close                    004066f0 f   crt:close.obj
+ 0001:000057b0       _remove                    004067b0 f   crt:remove.obj
+ 0001:000057c8       __except_handler3          004067c8 f   crt:seh2.obj
+ 0001:000058a0       __seh_longjmp_unwind@4     004068a0 f   crt:seh2.obj
+ 0001:000058c0       __global_unwind2           004068c0 f   crt:seh1.obj
+ 0001:000058e0       __unwind_handler           004068e0 f   crt:seh1.obj
+ 0001:00005910       __local_unwind2            00406910 f   crt:seh1.obj
+ 0001:0000596f       __NLG_Return2              0040696f     crt:seh1.obj
+ 0001:00005980       __abnormal_termination     00406980 f   crt:seh1.obj
+ 0001:000059b0       __NLG_Notify1              004069b0     crt:seh1.obj
+ 0001:000059b9       __NLG_Notify               004069b9     crt:seh1.obj
+ 0001:000059cd       __NLG_Dispatch             004069cd     crt:seh1.obj
+ 0001:000059e0       ___features                004069e0 f   crt:features.obj
+ 0001:00005aa0       ___clockinit               00406aa0 f   crt:clock.obj
+ 0001:00005ab0       _clock                     00406ab0 f   crt:clock.obj
+ 0001:00005af0       ___ioinit                  00406af0 f   crt:_ioinit.obj
+ 0001:00005d30       ___ioterm                  00406d30 f   crt:_ioinit.obj
+ 0001:00005f00       ___setargv                 00406f00 f   crt:_setargv.obj
+ 0001:00005fa0       ___setenvp                 00406fa0 f   crt:_setenvp.obj
+ 0001:00006060       ___crt_abort               00407060 f   crt:_crtabort.obj
+ 0001:00006140       ___wincmdln                00407140 f   crt:_wincmdln.obj
+ 0001:00006180       _exit                      00407180 f   crt:exit.obj
+ 0001:000061e0       ___xcptfilter              004071e0 f   crt:_xcptfilter.obj
+ 0001:00006250       ___mbtowc                  00407250 f   crt:_mbtowc.obj
+ 0001:00006520       ___putfield                00407520 f   crt:_putfield.obj
+ 0001:00006b40       ___puttxt                  00407b40 f   crt:_puttxt.obj
+ 0001:00006d50       _memcpy                    00407d50 f   crt:memcpy.obj
+ 0001:00006f40       _localeconv                00407f40 f   crt:localeconv.obj
+ 0001:00006f50       ___fpunscale               00407f50 f   crt:_fpunscale.obj
+ 0001:00006ff0       ___fpnorm                  00407ff0 f   crt:_fpnorm.obj
+ 0001:00007110       _feraiseexcept             00408110 f   crt:feraiseexcept.obj
+ 0001:000071a0       ____fopen                  004081a0 f   crt:__fopen.obj
+ 0001:00007270       __read                     00408270 f   crt:read.obj
+ 0001:00007520       _abort                     00408520 f   crt:abort.obj
+ 0001:00007540       __write                    00408540 f   crt:write.obj
+ 0001:000077e0       ___new_osfhnd              004087e0 f   crt:_osfinfo.obj
+ 0001:00007890       ___free_osfhnd             00408890 f   crt:_osfinfo.obj
+ 0001:00007920       ___set_osfhnd              00408920 f   crt:_osfinfo.obj
+ 0001:000079a0       ___get_osfhnd              004089a0 f   crt:_osfinfo.obj
+ 0001:000079c0       __get_osfhandle            004089c0 f   crt:_osfinfo.obj
+ 0001:00007a00       __open_osfhandle           00408a00 f   crt:_osfinfo.obj
+ 0001:00007ab0       ___maposerr                00408ab0 f   crt:_maperr.obj
+ 0001:00007c20       __unlink                   00408c20 f   crt:unlink.obj
+ 0001:00007c50       ___set_default_crt_heap_size 00408c50 f   crt:_dflheap.obj
+ 0001:00007c60       ___ulldiv                  00408c60 f   crt:_ulldiv.obj
+ 0001:00007da0       _fputs                     00408da0 f   crt:fputs.obj
+ 0001:00007dd0       __Exit                     00408dd0 f   crt:_exit.obj
+ 0001:00007e20       _signal                    00408e20 f   crt:signal.obj
+ 0001:00007e80       ____mbtowc                 00408e80 f   crt:__mbtowc.obj
+ 0001:00007ee0       ___putstr                  00408ee0 f   crt:_putstr.obj
+ 0001:00008080       ___litob                   00409080 f   crt:_litob.obj
+ 0001:00008260       ___fptestl                 00409260 f   crt:_fptestl.obj
+ 0001:00008270       ___ldtob                   00409270 f   crt:_ldtob.obj
+ 0001:000087b0       _ignore_handler_s          004097b0 f   crt:constraint_handler_s.obj
+ 0001:000087c0       _set_constraint_handler_s  004097c0 f   crt:constraint_handler_s.obj
+ 0001:000087e0       __crt_constraint           004097e0 f   crt:constraint_handler_s.obj
+ 0001:00008800       __open                     00409800 f   crt:open.obj
+ 0001:00008820       __sopen                    00409820 f   crt:open.obj
+ 0001:00008bb0       __lseek                    00409bb0 f   crt:lseek.obj
+ 0001:00008c40       ___cp_to_cp                00409c40 f   crt:_cp2cp.obj
+ 0001:00008cf0       _raise                     00409cf0 f   crt:raise.obj
+ 0001:00008df0       ___fwrite                  00409df0 f   crt:_fwrite.obj
+ 0001:00008ee0       ___buf_stream              00409ee0 f   crt:_stbuf.obj
+ 0001:00008f50       ___unbuf_stream            00409f50 f   crt:_stbuf.obj
+ 0001:00008fa0       ___wctomb                  00409fa0 f   crt:_wctomb.obj
+ 0001:000091e0       ___ullmod                  0040a1e0 f   crt:_ullmod.obj
+ 0001:00009260       ___lldiv                   0040a260 f   crt:_lldiv.obj
+ 0001:00009310       ___llmul                   0040a310 f   crt:_llmul.obj
+ 0001:00009350       ___fpunscalel              0040a350 f   crt:_fpunscalel.obj
+ 0001:00009370       ___fpscalel                0040a370 f   crt:_fpscalel.obj
+ 0001:00009390       ___genld                   0040a390 f   crt:_genld.obj
+ 0001:00009790       _ldiv                      0040a790 f   crt:ldiv.obj
+ 0001:000097c0       ___strerror                0040a7c0 f   crt:_strerror.obj
+ 0001:00009a10       __chsize                   0040aa10 f   crt:chsize.obj
+ 0001:00009b70       ___chkstk                  0040ab70 f   crt:_chkstk.obj
+ 0001:00009ba0       __isatty                   0040aba0 f   crt:isatty.obj
+ 0001:00009bd0       ____wctomb                 0040abd0 f   crt:__wctomb.obj
+ 0001:00009c30       _div                       0040ac30 f   crt:div.obj
+ 0001:00009c60       _calloc                    0040ac60 f   crt:calloc.obj
+ 0001:00009ca0       __setmode                  0040aca0 f   crt:setmode.obj
+ 0001:00009d40       _memset                    0040ad40 f   crt:memset.obj
+ 0001:00009e30       _RtlUnwind@16              0040ae30     kernel32:KERNEL32.dll
+ 0002:000002fc       ___malloc_binmax           0040b2fc     crt:malloc.obj
+ 0002:000003e0       ___inf                     0040b3e0     crt:_values.obj
+ 0002:000003e8       ___nan                     0040b3e8     crt:_values.obj
+ 0002:000003f0       ___eps                     0040b3f0     crt:_values.obj
+ 0002:000003f8       ___rteps                   0040b3f8     crt:_values.obj
+ 0002:00000400       ___xbig                    0040b400     crt:_values.obj
+ 0002:00000408       ___zero                    0040b408     crt:_values.obj
+ 0002:000013cc       ___xi_a                    0040c3cc     crt:_initex.obj
+ 0002:000013cc       ___xi_z                    0040c3cc     crt:_initex.obj
+ 0002:000013cc       ___xt_a                    0040c3cc     crt:_initex.obj
+ 0002:000013cc       ___xt_z                    0040c3cc     crt:_initex.obj
+ 0003:00000000       _dwContZ                   0040d000     oav.OBJ
+ 0003:00000004       _sCont                     0040d004     oav.OBJ
+ 0003:00000008       _sArea                     0040d008     oav.OBJ
+ 0003:0000000c       _sPoint                    0040d00c     oav.OBJ
+ 0003:00000010       _sCircle                   0040d010     oav.OBJ
+ 0003:00000014       _pStrings                  0040d014     oav.OBJ
+ 0003:0000002c       ___malloc_rovers           0040d02c     crt:malloc.obj
+ 0003:00000050       ___malloc_hiword           0040d050     crt:malloc.obj
+ 0003:00000054       ___malloc_loword           0040d054     crt:malloc.obj
+ 0003:00000058       ___malloc_mem              0040d058     crt:malloc.obj
+ 0003:0000005c       ___malloc_firstbin         0040d05c     crt:malloc.obj
+ 0003:00000060       ___malloc_lastbin          0040d060     crt:malloc.obj
+ 0003:00000068       _errno                     0040d068     crt:errno.obj
+ 0003:0000006c       ___argc                    0040d06c     crt:_crt0dat.obj
+ 0003:00000070       ___argv                    0040d070     crt:_crt0dat.obj
+ 0003:00000074       ___wargv                   0040d074     crt:_crt0dat.obj
+ 0003:00000078       ___envp                    0040d078     crt:_crt0dat.obj
+ 0003:0000007c       ___wenvp                   0040d07c     crt:_crt0dat.obj
+ 0003:00000080       ___crtheap                 0040d080     crt:_crt0dat.obj
+ 0003:00000084       ___crtheapsize             0040d084     crt:_crt0dat.obj
+ 0003:00000088       ___bheap_threshold         0040d088     crt:_crt0dat.obj
+ 0003:0000008c       ___sigtab                  0040d08c     crt:_crt0dat.obj
+ 0003:0000013c       ___stdin                   0040d13c     crt:_files.obj
+ 0003:0000018c       ___stdout                  0040d18c     crt:_files.obj
+ 0003:000001dc       ___stderr                  0040d1dc     crt:_files.obj
+ 0003:0000022c       ___filetab                 0040d22c     crt:_files.obj
+ 0003:0000062c       __NLG_Destination          0040d62c     crt:seh1.obj
+ 0003:0000063c       ___feature_mask            0040d63c     crt:features.obj
+ 0003:00000644       __Atfuns                   0040d644     crt:exit.obj
+ 0003:00000784       __Atcount                  0040d784     crt:exit.obj
+ 0003:00000788       __Atcount0                 0040d788     crt:exit.obj
+ 0003:0000078c       ___ctypetab                0040d78c     crt:_ctypetab.obj
+ 0003:00000790       ___locale                  0040d790     crt:localeconv.obj
+ 0003:000007cc       ___mbcurmax                0040d7cc     crt:_state.obj
+ 0003:000007d0       ___collatetab              0040d7d0     crt:_state.obj
+ 0003:00000810       ___wcollatetab             0040d810     crt:_state.obj
+ 0003:00000850       ___mbtowctab               0040d850     crt:_state.obj
+ 0003:00000890       ___wctombtab               0040d890     crt:_state.obj
+ 0003:000008d0       ___charcp                  0040d8d0     crt:_state.obj
+ 0003:000008d4       ___lcid                    0040d8d4     crt:_state.obj
+ 0003:000008dc       __IMPORT_DESCRIPTOR_KERNEL32 0040d8dc     kernel32:KERNEL32.dll
+ 0003:000008f0       __IMPORT_DESCRIPTOR_USER32 0040d8f0     user32:USER32.dll
+ 0003:00000904       __IMPORT_DESCRIPTOR_GDI32  0040d904     gdi32:GDI32.dll
+ 0003:00000918       __IMPORT_DESCRIPTOR_COMCTL32 0040d918     comctl32:COMCTL32.dll
+ 0003:0000092c       __IMPORT_DESCRIPTOR_COMDLG32 0040d92c     comdlg32:COMDLG32.dll
+ 0003:00000940       __IMPORT_DESCRIPTOR_SHELL32 0040d940     shell32:SHELL32.dll
+ 0003:00000954       __NULL_IMPORT_DESCRIPTOR   0040d954     kernel32:KERNEL32.dll
+ 0003:00000aec       __imp__FindResourceA@12    0040daec     kernel32:KERNEL32.dll
+ 0003:00000af0       __imp__LoadResource@8      0040daf0     kernel32:KERNEL32.dll
+ 0003:00000af4       __imp__SizeofResource@8    0040daf4     kernel32:KERNEL32.dll
+ 0003:00000af8       __imp__LockResource@4      0040daf8     kernel32:KERNEL32.dll
+ 0003:00000afc       __imp__FreeResource@4      0040dafc     kernel32:KERNEL32.dll
+ 0003:00000b00       __imp__LoadLibraryA@4      0040db00     kernel32:KERNEL32.dll
+ 0003:00000b04       __imp__GetStartupInfoA@4   0040db04     kernel32:KERNEL32.dll
+ 0003:00000b08       __imp__GetModuleHandleA@4  0040db08     kernel32:KERNEL32.dll
+ 0003:00000b0c       __imp__HeapCreate@12       0040db0c     kernel32:KERNEL32.dll
+ 0003:00000b10       __imp__HeapDestroy@4       0040db10     kernel32:KERNEL32.dll
+ 0003:00000b14       __imp__HeapAlloc@12        0040db14     kernel32:KERNEL32.dll
+ 0003:00000b18       __imp__HeapReAlloc@16      0040db18     kernel32:KERNEL32.dll
+ 0003:00000b1c       __imp__HeapFree@12         0040db1c     kernel32:KERNEL32.dll
+ 0003:00000b20       __imp__HeapSize@12         0040db20     kernel32:KERNEL32.dll
+ 0003:00000b24       __imp__HeapValidate@12     0040db24     kernel32:KERNEL32.dll
+ 0003:00000b28       __imp__VirtualAlloc@16     0040db28     kernel32:KERNEL32.dll
+ 0003:00000b2c       __imp__VirtualQuery@12     0040db2c     kernel32:KERNEL32.dll
+ 0003:00000b30       __imp__CloseHandle@4       0040db30     kernel32:KERNEL32.dll
+ 0003:00000b34       __imp__GetLastError@0      0040db34     kernel32:KERNEL32.dll
+ 0003:00000b38       __imp__RtlUnwind@16        0040db38     kernel32:KERNEL32.dll
+ 0003:00000b3c       __imp__GetSystemTimeAsFileTime@4 0040db3c     kernel32:KERNEL32.dll
+ 0003:00000b40       __imp__GetFileType@4       0040db40     kernel32:KERNEL32.dll
+ 0003:00000b44       __imp__GetStdHandle@4      0040db44     kernel32:KERNEL32.dll
+ 0003:00000b48       __imp__GetCurrentProcess@0 0040db48     kernel32:KERNEL32.dll
+ 0003:00000b4c       __imp__DuplicateHandle@28  0040db4c     kernel32:KERNEL32.dll
+ 0003:00000b50       __imp__SetHandleCount@4    0040db50     kernel32:KERNEL32.dll
+ 0003:00000b54       __imp__GetCommandLineA@0   0040db54     kernel32:KERNEL32.dll
+ 0003:00000b58       __imp__GetModuleFileNameA@12 0040db58     kernel32:KERNEL32.dll
+ 0003:00000b5c       __imp__GetEnvironmentStrings@0 0040db5c     kernel32:KERNEL32.dll
+ 0003:00000b60       __imp__FreeEnvironmentStringsA@4 0040db60     kernel32:KERNEL32.dll
+ 0003:00000b64       __imp__OutputDebugStringA@4 0040db64     kernel32:KERNEL32.dll
+ 0003:00000b68       __imp__UnhandledExceptionFilter@4 0040db68     kernel32:KERNEL32.dll
+ 0003:00000b6c       __imp__ReadFile@20         0040db6c     kernel32:KERNEL32.dll
+ 0003:00000b70       __imp__GetConsoleMode@8    0040db70     kernel32:KERNEL32.dll
+ 0003:00000b74       __imp__GetConsoleCP@0      0040db74     kernel32:KERNEL32.dll
+ 0003:00000b78       __imp__GetConsoleOutputCP@0 0040db78     kernel32:KERNEL32.dll
+ 0003:00000b7c       __imp__WriteFile@20        0040db7c     kernel32:KERNEL32.dll
+ 0003:00000b80       __imp__SetStdHandle@8      0040db80     kernel32:KERNEL32.dll
+ 0003:00000b84       __imp__DeleteFileA@4       0040db84     kernel32:KERNEL32.dll
+ 0003:00000b88       __imp__ExitProcess@4       0040db88     kernel32:KERNEL32.dll
+ 0003:00000b8c       __imp__SetConsoleCtrlHandler@8 0040db8c     kernel32:KERNEL32.dll
+ 0003:00000b90       __imp__MultiByteToWideChar@24 0040db90     kernel32:KERNEL32.dll
+ 0003:00000b94       __imp__CreateFileA@28      0040db94     kernel32:KERNEL32.dll
+ 0003:00000b98       __imp__SetFilePointer@16   0040db98     kernel32:KERNEL32.dll
+ 0003:00000b9c       __imp__WideCharToMultiByte@32 0040db9c     kernel32:KERNEL32.dll
+ 0003:00000ba0       __imp__SetEndOfFile@4      0040dba0     kernel32:KERNEL32.dll
+ 0003:00000ba4       KERNEL32_NULL_THUNK_DATA  0040dba4     kernel32:KERNEL32.dll
+ 0003:00000ba8       __imp__SendMessageA@16     0040dba8     user32:USER32.dll
+ 0003:00000bac       __imp__GetDlgItem@8        0040dbac     user32:USER32.dll
+ 0003:00000bb0       __imp__EndDialog@8         0040dbb0     user32:USER32.dll
+ 0003:00000bb4       __imp__LoadIconA@8         0040dbb4     user32:USER32.dll
+ 0003:00000bb8       __imp__RegisterClassA@4    0040dbb8     user32:USER32.dll
+ 0003:00000bbc       __imp__CreateWindowExA@48  0040dbbc     user32:USER32.dll
+ 0003:00000bc0       __imp__ShowWindow@8        0040dbc0     user32:USER32.dll
+ 0003:00000bc4       __imp__UpdateWindow@4      0040dbc4     user32:USER32.dll
+ 0003:00000bc8       __imp__TranslateMessage@4  0040dbc8     user32:USER32.dll
+ 0003:00000bcc       __imp__DispatchMessageA@4  0040dbcc     user32:USER32.dll
+ 0003:00000bd0       __imp__GetMessageA@16      0040dbd0     user32:USER32.dll
+ 0003:00000bd4       __imp__MessageBoxA@16      0040dbd4     user32:USER32.dll
+ 0003:00000bd8       __imp__SendDlgItemMessageA@20 0040dbd8     user32:USER32.dll
+ 0003:00000bdc       __imp__SetFocus@4          0040dbdc     user32:USER32.dll
+ 0003:00000be0       __imp__BeginPaint@8        0040dbe0     user32:USER32.dll
+ 0003:00000be4       __imp__EndPaint@8          0040dbe4     user32:USER32.dll
+ 0003:00000be8       __imp__DialogBoxParamA@20  0040dbe8     user32:USER32.dll
+ 0003:00000bec       __imp__PostMessageA@16     0040dbec     user32:USER32.dll
+ 0003:00000bf0       __imp__MoveWindow@24       0040dbf0     user32:USER32.dll
+ 0003:00000bf4       __imp__GetClientRect@8     0040dbf4     user32:USER32.dll
+ 0003:00000bf8       __imp__InvalidateRect@12   0040dbf8     user32:USER32.dll
+ 0003:00000bfc       __imp__PostQuitMessage@4   0040dbfc     user32:USER32.dll
+ 0003:00000c00       __imp__DefWindowProcA@16   0040dc00     user32:USER32.dll
+ 0003:00000c04       USER32_NULL_THUNK_DATA    0040dc04     user32:USER32.dll
+ 0003:00000c08       __imp__SetTextAlign@8      0040dc08     gdi32:GDI32.dll
+ 0003:00000c0c       __imp__TextOutA@20         0040dc0c     gdi32:GDI32.dll
+ 0003:00000c10       __imp__CreatePen@12        0040dc10     gdi32:GDI32.dll
+ 0003:00000c14       __imp__SelectObject@8      0040dc14     gdi32:GDI32.dll
+ 0003:00000c18       __imp__MoveToEx@16         0040dc18     gdi32:GDI32.dll
+ 0003:00000c1c       __imp__LineTo@12           0040dc1c     gdi32:GDI32.dll
+ 0003:00000c20       __imp__SetTextColor@8      0040dc20     gdi32:GDI32.dll
+ 0003:00000c24       __imp__SetArcDirection@8   0040dc24     gdi32:GDI32.dll
+ 0003:00000c28       __imp__ArcTo@36            0040dc28     gdi32:GDI32.dll
+ 0003:00000c2c       __imp__Ellipse@20          0040dc2c     gdi32:GDI32.dll
+ 0003:00000c30       __imp__DeleteObject@4      0040dc30     gdi32:GDI32.dll
+ 0003:00000c34       __imp__GetStockObject@4    0040dc34     gdi32:GDI32.dll
+ 0003:00000c38       __imp__Rectangle@20        0040dc38     gdi32:GDI32.dll
+ 0003:00000c3c       __imp__SetROP2@8           0040dc3c     gdi32:GDI32.dll
+ 0003:00000c40       __imp__SetBkMode@8         0040dc40     gdi32:GDI32.dll
+ 0003:00000c44       GDI32_NULL_THUNK_DATA     0040dc44     gdi32:GDI32.dll
+ 0003:00000c48       __imp__InitCommonControls@0 0040dc48     comctl32:COMCTL32.dll
+ 0003:00000c4c       __imp__ImageList_LoadImageA@28 0040dc4c     comctl32:COMCTL32.dll
+ 0003:00000c50       __imp__CreateStatusWindowA@16 0040dc50     comctl32:COMCTL32.dll
+ 0003:00000c54       COMCTL32_NULL_THUNK_DATA  0040dc54     comctl32:COMCTL32.dll
+ 0003:00000c58       __imp__GetOpenFileNameA@4  0040dc58     comdlg32:COMDLG32.dll
+ 0003:00000c5c       COMDLG32_NULL_THUNK_DATA  0040dc5c     comdlg32:COMDLG32.dll
+ 0003:00000c60       __imp__DragQueryFileA@16   0040dc60     shell32:SHELL32.dll
+ 0003:00000c64       __imp__DragFinish@4        0040dc64     shell32:SHELL32.dll
+ 0003:00000c68       __imp__DragAcceptFiles@8   0040dc68     shell32:SHELL32.dll
+ 0003:00000c6c       SHELL32_NULL_THUNK_DATA   0040dc6c     shell32:SHELL32.dll
+ 0003:000016e4       _sTvins                    0040e6e4     <common>
+ 0003:00001728       _sRectView                 0040e728     <common>
+ 0003:00001738       _fDivLon                   0040e738     <common>
+ 0003:0000173c       _fDivLat                   0040e73c     <common>
+ 0003:00001740       _nMidY                     0040e740     <common>
+ 0003:00001744       _nMidX                     0040e744     <common>
+ 0003:00001748       _fMidLon                   0040e748     <common>
+ 0003:0000174c       _fMidLat                   0040e74c     <common>
+ 0003:00001750       _fLonMax                   0040e750     <common>
+ 0003:00001754       _fLonMin                   0040e754     <common>
+ 0003:00001758       _fLatMax                   0040e758     <common>
+ 0003:0000175c       _fLatMin                   0040e75c     <common>
+ 0003:00001760       _dwStringsIdx              0040e760     <common>
+ 0003:00001764       _dwCircleZ                 0040e764     <common>
+ 0003:00001768       _dwPointZ                  0040e768     <common>
+ 0003:0000176c       _dwAreaZ                   0040e76c     <common>
+ 0003:00001770       _dwContSel                 0040e770     <common>
+ 0003:00001774       _hWndSB                    0040e774     <common>
+ 0003:00001778       _hWndLV                    0040e778     <common>
+ 0003:0000177c       _hWndTV                    0040e77c     <common>
+ 0003:00001780       _hApp                      0040e780     <common>
+ 0003:00001784       _ghInstance                0040e784     <common>
+ 0003:00001788       __fltused                  0040e788     <common>
+ 0003:0000178c       ___iolim                   0040e78c     <common>
+ 0003:00001790       ___iotab                   0040e790     <common>
+
+ entry point at        0001:00003f20
+
+ Static symbols
+
+ 0001:00000000       _EditStreamCallback@16     00401000 f   oav.OBJ
+ 0001:00000130       _LoadRtfResource@8         00401130 f   oav.OBJ
+ 0001:00002860       _prout                     00403860 f   crt:sprintf.obj
+ 0001:00003470       _grabhunk                  00404470 f   crt:malloc.obj
+ 0001:00003d30       _closeall                  00404d30 f   crt:fclose.obj
+ 0001:000049a0       _dmul                      004059a0 f   crt:_fppow10.obj
+ 0001:00005d60       _parse_cmdline             00406d60 f   crt:_setargv.obj
+ 0001:00007cd0       ___my_fputs                00408cd0 f   crt:fputs.obj
+ 0001:00007de0       _ctrlevent_capture@4       00408de0 f   crt:signal.obj

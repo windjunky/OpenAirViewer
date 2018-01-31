@@ -16,11 +16,11 @@ AS = poasm.exe#
 RC = porc.exe#
 LINK = polink.exe#
 SIGN = posign.exe#
-CCFLAGS = -Tx86-coff -Ot -W1 -Ze -Gz -std:C99#
-RCFLAGS = -r#
-LINKFLAGS = -subsystem:windows -machine:x86  kernel32.lib user32.lib gdi32.lib comctl32.lib comdlg32.lib advapi32.lib delayimp.lib shell32.lib#
-ASFLAGS = -AIA32 -Gz#
-SIGNFLAGS = -location:CU -store:MY -timeurl:http://timestamp.verisign.com/scripts/timstamp.dll -errkill#
+CCFLAGS = -std:C99 -Tx86-coff -Zi -Ot -Ob1 -fp:precise -W1 -Gz -Ze#
+RCFLAGS = #
+LINKFLAGS = -debug -debugtype:cv -subsystem:windows -machine:x86 -map kernel32.lib user32.lib gdi32.lib comctl32.lib comdlg32.lib advapi32.lib delayimp.lib shell32.lib#
+ASFLAGS = -AIA32 -Zi -Gz#
+SIGNFLAGS = -timeurl:http://timestamp.verisign.com/scripts/timstamp.dll -location:CU -store:MY -errkill#
 INCLUDE = $(PellesCDir)\Include\Win;$(PellesCDir)\Include#
 LIB = $(PellesCDir)\Lib\Win;$(PellesCDir)\Lib#
 
@@ -51,6 +51,6 @@ output\oav.res: \
 	TreeImg.bmp
 	$(RC) $(RCFLAGS) "$!" -Fo"$@"
 
-.SILENT:
-
 .EXCLUDEDFILES:
+
+.SILENT:
