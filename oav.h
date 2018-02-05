@@ -2,16 +2,17 @@
 
 #define IDI_MAIN	1000
 
-#define IDM_MAIN   	1100
-#define IDM_OPEN   	1110
-#define IDM_HELP   	1120
-#define IDM_ENDE   	1130
+#define IDM_MAIN    1100 // Menüpunkte
+#define IDM_OPEN    1110 // Datei öffnen
+#define IDM_SAVE    1120 // Datei speichern
+#define IDM_HELP    1130 // Hilfe
+#define IDM_ENDE    1140 // Ende
 
-#define IDC_TREE	1200
+#define IDC_TREE    1200
 
-#define IDC_STBA	1300
+#define IDC_STBA    1300
 
-#define IDR_RTFI	1400
+#define IDR_RTFI    1400
 
-#define IDD_HELP	1500
-#define IDB_RTFI	1510
+#define IDD_HELP    1500
+#define IDB_RTFI    1510

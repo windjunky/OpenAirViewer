@@ -18,7 +18,7 @@
 #define PI         3.14159265358979323846
 #define RHO       57.29577951308232087685
 
-#define IBOXH        140             // InfoBox-Höhe
+#define IBOXH         140            // InfoBox-Höhe
 #define IBOXS1        100            // InfoBox-Breite Info
 #define IBOXS2        250            // InfoBox-Breite Inhalt
 #define IBOXB        IBOXS1+IBOXS2+5 // InfoBox-Breite über alles
@@ -739,7 +739,7 @@ void ReadOAFile ( char *szFile )
             if ( fLatMin > sArea[dwI].fLatMin ) fLatMin = sArea[dwI].fLatMin;
             if ( fLatMax < sArea[dwI].fLatMax ) fLatMax = sArea[dwI].fLatMax;
             if ( fLonMin > sArea[dwI].fLonMin ) fLonMin = sArea[dwI].fLonMin;
-            if ( fLonMax < sArea[dwI].fLonMax )    fLonMax = sArea[dwI].fLonMax;
+            if ( fLonMax < sArea[dwI].fLonMax ) fLonMax = sArea[dwI].fLonMax;
         }
     }
 
@@ -750,6 +750,67 @@ void ReadOAFile ( char *szFile )
     SendDlgItemMessage ( hApp, IDC_STBA, SB_SETTEXT, 0, (LPARAM) szBuffer );
 
     SetFocus ( hWndTV );
+
+    return;
+}
+
+/****************************************************************************
+ *                                                                          *
+ * Programm: SaveFile                                                       *
+ *                                                                          *
+ * Aufgabe : Speichert die OpenAirDatei                                     *
+ *                                                                          *
+ ****************************************************************************/
+void SaveOAFile ( char *szFile )
+{
+    char   szBuffer[256];
+    FILE  *pFile;
+    DWORD  dwI = 0;
+
+    TreeView_SelectItem ( hWndTV, 0 );
+
+    if ( ( pFile = fopen ( szFile, "wt" ) ) == NULL )                          // als Textdatei speichern
+    {
+        MessageBox ( hApp, "OpenAir Datei konnte nicht gespeichert werden", "Datei speichern", MB_ICONEXCLAMATION );
+        
+        return;
+    }
+
+    // Reihenfolge der Lufträume
+	// *####### BEGIN AIRSPACE -RESTRICTED- ########     ED-R
+    // *####### BEGIN AIRSPACE -DANGER AREAS- ########   ED-D
+	// *####### BEGIN AIRSPACE -CTR- ########            CTR
+    // *####### BEGIN AIRSPACE D -NOT CTR- ########      D
+    // *####### BEGIN AIRSPACE -RMZ- ########            RMZ
+    // *####### BEGIN AIRSPACE -TMZ- ########            TMZ
+	// *####### BEGIN AIRSPACE -GLIDER SECTORS- ######## W 
+
+    for ( dwI=1; dwI<dwAreaZ; dwI++ )
+    {
+        // Reihenfolge
+		// AC R
+		// AN ED-R116 Baumholder
+		// AH FL95
+		// AL 1500ft AGL
+		// 
+		// Koordinaten in Grad : Minute : Sekunde N/S Grad : Minute : Sekunde W/E
+		// Geographische Breite + = Nord, - = Süd
+		// 
+		//
+		// Punkt
+		// DP 49:39:42 N 007:00:21 E                          Koordinaten
+		//
+		// Kreis
+		// V X=53:24:25 N 010:25:10 E                         Mittelpunkt
+		// DC 1.10                                            Radius (Nautische Meilen)
+		//
+		// Kreisbogen
+		// V D=-                                              Richtung (nur bei linksdrehend)
+		// V X=52:24:38 N 013:07:46 E                         Mittelpunkt
+        // DB 52:22:39 N 013:08:15 E , 52:24:33 N 013:11:02 E Von-Bis
+    }
+    
+    fclose ( pFile );
 
     return;
 }
@@ -1006,7 +1067,6 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark, int iPenSize )
     return;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: View                                                           *
@@ -1106,21 +1166,6 @@ void View ( HWND hWnd )
                     ViewArea ( hDC, dwI, 0, FALSE, PEN_SIZE_NORMAL);
                 }
             }
-            /*DWORD dwIndex = sCont[dwContSel].dwIndex;
-
-            float fDelLat = sArea[dwIndex].fLatMax - sArea[dwIndex].fLatMin;
-            float fDelLon = sArea[dwIndex].fLonMax - sArea[dwIndex].fLonMin;
-
-            fMidLat = sArea[dwIndex].fLatMin + fDelLat / 2.0;
-            fMidLon = sArea[dwIndex].fLonMin + fDelLon / 2.0;
-
-            float fKorr = cos ( fMidLat / RHO );
-
-            fDivLat = max ( fDelLon * fKorr / nDelX, fDelLat / nDelY ) * 1.5;
-            fDivLon = fDivLat / fKorr;
-
-            ViewArea ( hDC, dwIndex, 0, TRUE, PEN_SIZE_NORMAL); */
-
             break;
         }
 
@@ -1312,12 +1357,11 @@ void ShowInfo ( BYTE bTyp, DWORD dwIndex )
     return;
 }
 
-
 /****************************************************************************
  *                                                                          *
  * Programm: WndProc                                                        *
  *                                                                          *
- * Aufgabe : Das MainFenster                                                  *
+ * Aufgabe : Eventbehandlungsroutine für das MainFenster                    *
  *                                                                          *
  ****************************************************************************/
 LRESULT WINAPI WndProc ( HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam )
@@ -1348,6 +1392,28 @@ LRESULT WINAPI WndProc ( HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam )
                     ofn.lpstrDefExt = "txt";
 
                     if ( GetOpenFileName ( &ofn ) )    ReadOAFile ( szFile );
+
+                    return TRUE;
+                }
+
+                case IDM_SAVE:
+                {
+                    OPENFILENAME ofn;
+                    char         szFile[MAX_PATH] = { 0 };
+
+                    memset ( &ofn, 0, sizeof ( ofn ) );
+
+                    ofn.lStructSize = sizeof ( ofn );
+                    ofn.hwndOwner   = hWnd;
+                    ofn.hInstance   = ghInstance;
+                    ofn.lpstrFilter = "OpenAir Datei (*.txt)\0*.txt\0Flytec OpenAir Datei (*.faf)\0*.faf\0";
+                    ofn.lpstrFile   = szFile;
+                    ofn.nMaxFile    = MAX_PATH;
+                    ofn.lpstrTitle  = "OpenAir Datei speichern";
+                    ofn.Flags       = OFN_EXPLORER;
+                    ofn.lpstrDefExt = "txt";
+
+                    if ( GetSaveFileName ( &ofn ) )    SaveOAFile ( szFile );
 
                     return TRUE;
                 }
