@@ -26,9 +26,9 @@
 #define PEN_SIZE_NORMAL  2
 #define PEN_SIZE_SELECT  4
 
-#define OA_TYP_FILE        0
-#define OA_TYP_AREA        1    
-#define OA_TYP_POINT       2
+#define OA_TYP_FILE      0
+#define OA_TYP_AREA      1    
+#define OA_TYP_POINT     2
 #define OA_TYP_CIRCLE    3
 #define OA_TYP_ARC       4
 
@@ -72,7 +72,7 @@ struct strArea
     DWORD  dwName;
     DWORD  dwHigh;
     DWORD  dwLow;
-    DWORD  dwElemIdx;             // Index auf Elemente (Container)
+    DWORD  dwElemIdx;             // Index auf Elemente (strContainer)
     DWORD  dwElemAnz;
     float  fLatMin, fLatMax;      // Min-Max geographische Breite des Luftraums (vertikal)
     float  fLonMin, fLonMax;      // Min-Max geographische Länge des Luftraums (horizontal)
@@ -81,7 +81,7 @@ struct strArea *sArea = NULL;
 
 struct strPoint
 {
-    DWORD  dwArea;                // Index der Area
+    DWORD  dwArea;                // Index für sArea
     float  fLat, fLon;
 };
 struct strPoint *sPoint = NULL;
@@ -89,7 +89,7 @@ struct strPoint *sPoint = NULL;
 struct strCircle
 {
     BYTE   bRotDir;               // Drehrichtung 0 - rechts, 1 - links
-    DWORD  dwArea;                // Index der Area
+    DWORD  dwArea;                // Index für sArea
     float  fRad;
     float  fLatM, fLonM;
     float  fLatB, fLonB;
@@ -116,7 +116,6 @@ static DWORD EditStreamCallback ( DWORD_PTR dwCookie, LPBYTE pbBuff, LONG cb, LO
     static LPBYTE  pbResData = NULL;
 
     // avoid loading the resource more than once
-    
     if ( dwRead == 0 )
     {
         sprintf ( szResIdStr, "#%d", dwCookie );
@@ -182,7 +181,7 @@ static DWORD LoadRtfResource ( HWND hwndRichEdit, int iResID )
 
 /****************************************************************************
  *                                                                          *
- * Programm: HelpDlgProc                                                    *
+ * Programm: HlpDlgProc                                                    *
  *                                                                          *
  * Aufgabe : Help Dialog ausgeben mit RichText                              *
  *                                                                          *
@@ -233,16 +232,16 @@ int PASCAL WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     LoadLibrary ( "riched32.dll" );
 
-    wc.style         = 0;
+    wc.style           = 0;
     wc.lpfnWndProc     = (WNDPROC) WndProc;
-    wc.cbClsExtra     = 0;
+    wc.cbClsExtra      = 0;
     wc.cbWndExtra      = 0;
-    wc.hInstance     = hInstance;
-    wc.hIcon         = LoadIcon ( hInstance, MAKEINTRESOURCE ( IDI_MAIN ) );
+    wc.hInstance       = hInstance;
+    wc.hIcon           = LoadIcon ( hInstance, MAKEINTRESOURCE ( IDI_MAIN ) );
     wc.hCursor         = 0;
-    wc.hbrBackground = (HBRUSH) COLOR_WINDOW;
-    wc.lpszMenuName     = MAKEINTRESOURCE ( IDM_MAIN );
-    wc.lpszClassName = szAppClass;
+    wc.hbrBackground   = (HBRUSH) COLOR_WINDOW;
+    wc.lpszMenuName    = MAKEINTRESOURCE ( IDM_MAIN );
+    wc.lpszClassName   = szAppClass;
 
     if ( ! RegisterClass ( &wc ) ) return 0;
 
@@ -263,7 +262,7 @@ int PASCAL WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstance,
         TranslateMessage ( &msg );        
         DispatchMessage  ( &msg );
     }
-     return msg.wParam;
+    return msg.wParam;
 }
 
 /****************************************************************************
@@ -283,7 +282,7 @@ DWORD ReadString ( char *szString )
 
     if ( pStrings == NULL ) return ( 0 );
 
-    strcpy ( pStrings + dwStringsIdx, szString );
+    strncpy ( pStrings + dwStringsIdx, szString, dwLen );
 
     DWORD dwPos = dwStringsIdx;
 
@@ -294,12 +293,18 @@ DWORD ReadString ( char *szString )
 
 /****************************************************************************
  *                                                                          *
- * Programm: ReadKoor                                                       *
+ * Programm: LatLonStrToFloat                                               *
  *                                                                          *
- * Aufgabe : Liste eine Koordinate                                          *
+ * Aufgabe : Eine Längen/Breitenangabe von string in float-Zahl umrechnen   *
+ *                                                                          *
+ *           pString: "GRAD:MINUTE:SEKUNDE (N/S/O/W)"                       *
+ *                                                                          *
+ *           fVal:    Koordinate im Dezimalformat als float                 *
+ *                                                                          *
+ *           Südliche Breite/Westliche Länge sind negativ!!!                *
  *                                                                          *
  ****************************************************************************/
-float ReadKoor ( char *pString )
+float LatLonStrToFloat ( char *pString )
 {
     char *pPtr = pString;
     float fVal = 0.0, fDiv = 1.0;
@@ -328,9 +333,72 @@ float ReadKoor ( char *pString )
 
 /****************************************************************************
  *                                                                          *
+ * Programm: LatLonFloatToStr                                               *
+ *                                                                          *
+ * Aufgabe : Eine Längen/Breitenangabe von float in einen string umrechnen  *
+ *                                                                          *
+ *           fKoor: Koordinate im Dezimalformat als float                   *
+ *           bLon: TRUE - Längenangabe / FALSE - Breitenangabe              *
+ *                                                                          *
+ *           pString: "GRAD:MINUTE:SEKUNDE (N/S/O/W)"                       *
+ *           iLen: Länge des erzeugten Texts                                *
+ *                                                                          *
+ *           Südliche Breite/Westliche Länge sind negativ!!!                *
+ *                                                                          *
+ ****************************************************************************/
+int LatLonFloatToStr ( float fKoor, BOOL bLon, char *pString )
+{
+    float fGrd, fMin, fSek;   
+    char cLon;
+	char cLat;
+    int iLen = 0;
+    BOOL bNeg = FALSE;
+
+    bNeg = FALSE;
+    if ( fKoor < 0 )
+    {
+        bNeg = TRUE;
+        fKoor *= -1.0f;
+    }
+
+    fGrd = truncf( fKoor );
+    fKoor = ( fKoor - fGrd ) * 60.0f;
+    fMin = truncf( fKoor );
+    fKoor = ( fKoor - fMin ) * 60.0f;
+    fSek = truncf( fKoor );
+
+    if ( TRUE == bLon )
+    { 
+        if ( TRUE == bNeg )
+        {
+            cLon = 'W';
+        }    
+        else
+        {
+            cLon = 'E';
+        }
+        iLen = sprintf( pString, "%03.0f:%02.0f:%02.0f %c", fGrd, fMin, fSek, cLon ); // geographische Länge z.B. 013:00:00 E
+    }
+    else
+    {
+        if ( TRUE == bNeg )
+        {
+            cLat = 'S';
+        }    
+        else
+        {
+            cLat = 'N';
+        }
+        iLen = sprintf( pString, "%02.0f:%02.0f:%02.0f %c", fGrd, fMin, fSek, cLat ); // geographische Breite z.B. 52:00:00 N
+    }
+    return iLen;
+}
+
+/****************************************************************************
+ *                                                                          *
  * Programm: SetMax                                                         *
  *                                                                          *
- * Aufgabe : Set die Maximalwerte (oder Startwert)                          *
+ * Aufgabe : Setze die Maximalwerte (oder Startwert)                        *
  *                                                                          *
  ****************************************************************************/
 void SetMax ( float fLat, float fLon, float fRad )
@@ -378,9 +446,9 @@ float Dist ( float fX, float fY )
 
 /****************************************************************************
  *                                                                          *
- * Programm: ReadFile                                                       *
+ * Programm: ReadOAFile                                                     *
  *                                                                          *
- * Aufgabe : Liest die OpenAirDatei                                         *
+ * Aufgabe : Liest die OpenAirDatei und erzeugt den TreeView                *
  *                                                                          *
  ****************************************************************************/
 void ReadOAFile ( char *szFile )
@@ -488,7 +556,7 @@ void ReadOAFile ( char *szFile )
             {                                    // Ausnahme V -> Angabe des Mittelpunkts bei Circle und Arc
                 if ( ! bNewArea )
                 {
-                    sTvins.hParent               = sCont[0].hParent;
+                    sTvins.hParent             = sCont[0].hParent;
                     sTvins.item.lParam         = dwContZ;        
                     sTvins.item.pszText        = pStrings + sArea[dwAreaZ].dwName;
                     sTvins.item.iImage         = 3;
@@ -537,7 +605,7 @@ void ReadOAFile ( char *szFile )
 
                         sprintf ( szBuffer, "%03lu Kreisbogen", sArea[dwAreaZ-1].dwElemAnz + 1 );
 
-                        sTvins.hParent               = sCont[dwAktArea].hParent;
+                        sTvins.hParent             = sCont[dwAktArea].hParent;
                         sTvins.item.lParam         = dwContZ;        
                         sTvins.item.pszText        = szBuffer;
                         sTvins.item.iImage         = 11;
@@ -553,7 +621,7 @@ void ReadOAFile ( char *szFile )
 
                         sArea[dwAreaZ-1].dwElemAnz++;
                     
-                        dwContZ ++;
+                        dwContZ++;
                         dwCircleZ++;
 
                         bNewPoint = FALSE;
@@ -570,10 +638,10 @@ void ReadOAFile ( char *szFile )
 
                         float fCos = cos ( fCircleLat / RHO );
 
-                        sCircle[dwCircleZ].fLatB = ReadKoor ( szBuffer + 3 );
-                        sCircle[dwCircleZ].fLonB = ReadKoor ( NULL );
-                        sCircle[dwCircleZ].fLatE = ReadKoor ( NULL );
-                        sCircle[dwCircleZ].fLonE = ReadKoor ( NULL );
+                        sCircle[dwCircleZ].fLatB = LatLonStrToFloat ( szBuffer + 3 );
+                        sCircle[dwCircleZ].fLonB = LatLonStrToFloat ( NULL );
+                        sCircle[dwCircleZ].fLatE = LatLonStrToFloat ( NULL );
+                        sCircle[dwCircleZ].fLonE = LatLonStrToFloat ( NULL );
                         sCircle[dwCircleZ].fRad  = ( Dist (   sCircle[dwCircleZ].fLatB - fCircleLat,
                                                             ( sCircle[dwCircleZ].fLonB - fCircleLon ) * fCos ) +
                                                      Dist (   sCircle[dwCircleZ].fLatE - fCircleLat,
@@ -585,7 +653,7 @@ void ReadOAFile ( char *szFile )
 
                         sprintf ( szBuffer, "%03lu Kreisbogen", sArea[dwAreaZ-1].dwElemAnz + 1 );
 
-                        sTvins.hParent               = sCont[dwAktArea].hParent;
+                        sTvins.hParent             = sCont[dwAktArea].hParent;
                         sTvins.item.lParam         = dwContZ;        
                         sTvins.item.pszText        = szBuffer;
                         sTvins.item.iImage         = 9;
@@ -622,7 +690,7 @@ void ReadOAFile ( char *szFile )
 
                         sprintf ( szBuffer, "%03lu Kreis", sArea[dwAreaZ-1].dwElemAnz + 1 );
 
-                        sTvins.hParent               = sCont[dwAktArea].hParent;
+                        sTvins.hParent             = sCont[dwAktArea].hParent;
                         sTvins.item.lParam         = dwContZ;        
                         sTvins.item.pszText        = szBuffer;
                         sTvins.item.iImage         = 11;
@@ -651,14 +719,14 @@ void ReadOAFile ( char *szFile )
                         sPoint = realloc ( sPoint, ( dwPointZ + 1 ) * sizeof ( struct strPoint ) );
 
                         sPoint[dwPointZ].dwArea = dwAktArea;
-                        sPoint[dwPointZ].fLat   = ReadKoor ( szBuffer + 3 );
-                        sPoint[dwPointZ].fLon   = ReadKoor ( NULL );
+                        sPoint[dwPointZ].fLat   = LatLonStrToFloat ( szBuffer + 3 );
+                        sPoint[dwPointZ].fLon   = LatLonStrToFloat ( NULL );
 
                         char szBuffer[12];
 
                         sprintf ( szBuffer, "%03lu Punkt", sArea[dwAreaZ-1].dwElemAnz + 1 );
 
-                        sTvins.hParent        = sCont[dwAktArea].hParent;
+                        sTvins.hParent      = sCont[dwAktArea].hParent;
                         sTvins.item.lParam  = dwContZ;        
                         sTvins.item.pszText = szBuffer;
             
@@ -693,7 +761,7 @@ void ReadOAFile ( char *szFile )
                 }
             }
 
-            case 'V':                            // Circle parameter
+            case 'V':                            // Kreis/Kreisbogen Parameter
             {
                 char *pPtr = szBuffer + 1;
 
@@ -714,8 +782,8 @@ void ReadOAFile ( char *szFile )
                     }
                     else if ( *pPtr == 'X' || *pPtr == 'x' )
                     {
-                        fCircleLat = ReadKoor ( pPtr + 2 );
-                        fCircleLon = ReadKoor ( NULL );
+                        fCircleLat = LatLonStrToFloat ( pPtr + 2 );
+                        fCircleLon = LatLonStrToFloat ( NULL );
                     }
                 }
             }
@@ -756,7 +824,7 @@ void ReadOAFile ( char *szFile )
 
 /****************************************************************************
  *                                                                          *
- * Programm: SaveFile                                                       *
+ * Programm: SaveOAFile                                                     *
  *                                                                          *
  * Aufgabe : Speichert die OpenAirDatei                                     *
  *                                                                          *
@@ -764,8 +832,10 @@ void ReadOAFile ( char *szFile )
 void SaveOAFile ( char *szFile )
 {
     char   szBuffer[256];
+    int    iOffset;
     FILE  *pFile;
-    DWORD  dwI = 0;
+    DWORD  dwA = 0;
+    DWORD  dwC = 0;
 
     TreeView_SelectItem ( hWndTV, 0 );
 
@@ -777,37 +847,121 @@ void SaveOAFile ( char *szFile )
     }
 
     // Reihenfolge der Lufträume
-	// *####### BEGIN AIRSPACE -RESTRICTED- ########     ED-R
+    // *####### BEGIN AIRSPACE -RESTRICTED- ########     ED-R
     // *####### BEGIN AIRSPACE -DANGER AREAS- ########   ED-D
-	// *####### BEGIN AIRSPACE -CTR- ########            CTR
+    // *####### BEGIN AIRSPACE -CTR- ########            CTR
     // *####### BEGIN AIRSPACE D -NOT CTR- ########      D
     // *####### BEGIN AIRSPACE -RMZ- ########            RMZ
     // *####### BEGIN AIRSPACE -TMZ- ########            TMZ
-	// *####### BEGIN AIRSPACE -GLIDER SECTORS- ######## W 
+    // *####### BEGIN AIRSPACE -GLIDER SECTORS- ######## W 
 
-    for ( dwI=1; dwI<dwAreaZ; dwI++ )
+    for ( dwA=0; dwA<dwAreaZ; dwA++ )
     {
         // Reihenfolge
-		// AC R
-		// AN ED-R116 Baumholder
-		// AH FL95
-		// AL 1500ft AGL
-		// 
-		// Koordinaten in Grad : Minute : Sekunde N/S Grad : Minute : Sekunde W/E
-		// Geographische Breite + = Nord, - = Süd
-		// 
-		//
-		// Punkt
-		// DP 49:39:42 N 007:00:21 E                          Koordinaten
-		//
-		// Kreis
-		// V X=53:24:25 N 010:25:10 E                         Mittelpunkt
-		// DC 1.10                                            Radius (Nautische Meilen)
-		//
-		// Kreisbogen
-		// V D=-                                              Richtung (nur bei linksdrehend)
-		// V X=52:24:38 N 013:07:46 E                         Mittelpunkt
-        // DB 52:22:39 N 013:08:15 E , 52:24:33 N 013:11:02 E Von-Bis
+        // AC R
+        // AN ED-R116 Baumholder
+        // AH FL95
+        // AL 1500ft AGL
+        //
+        sprintf( szBuffer, "AC %s\n", pStrings + sArea[dwA].dwClass ); 
+        fputs( szBuffer, pFile );
+        sprintf( szBuffer, "AN %s\n", pStrings + sArea[dwA].dwName ); 
+        fputs( szBuffer, pFile );
+        sprintf( szBuffer, "AH %s\n", pStrings + sArea[dwA].dwHigh ); 
+        fputs( szBuffer, pFile );
+        sprintf( szBuffer, "AL %s\n", pStrings + sArea[dwA].dwLow ); 
+        fputs( szBuffer, pFile );
+
+        // Koordinaten in GRAD:MINUTE:SEKUNDE N/S GRAD:MINUTE:SEKUNDE W/E
+        // Geographische Breite + = Nord, - = Süd
+        // Geographische Länge + = Ost, - = West     
+        for ( dwC=sArea[dwA].dwElemIdx; dwC<(sArea[dwA].dwElemIdx + sArea[dwA].dwElemAnz); dwC++)
+        {
+            switch (sCont[dwC].bTyp)
+            {
+                // Punkt
+                // DP 49:39:42 N 007:00:21 E                         
+                case OA_TYP_POINT:
+                    iOffset = sprintf( szBuffer, "DP ");
+       
+                    iOffset += LatLonFloatToStr(sPoint[sCont[dwC].dwIndex].fLat, FALSE, szBuffer + iOffset);               
+					iOffset += sprintf( szBuffer + iOffset, " " );
+                    iOffset += LatLonFloatToStr(sPoint[sCont[dwC].dwIndex].fLon, TRUE, szBuffer + iOffset);               
+       
+					sprintf( szBuffer + iOffset, "\n" );
+
+					fputs( szBuffer, pFile );
+                    break;
+
+                // Kreis
+                // V X=53:24:25 N 010:25:10 E                         Mittelpunkt
+                // DC 1.10                                            Radius (Nautische Meilen)
+                case OA_TYP_CIRCLE:
+                    iOffset = sprintf( szBuffer, "V X=" );
+                    
+					iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLatM, FALSE, szBuffer + iOffset);               
+					iOffset += sprintf( szBuffer + iOffset, " " );
+                    iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLonM, TRUE, szBuffer + iOffset);                    
+     
+                    sprintf( szBuffer + iOffset, "\n" );               
+
+					fputs( szBuffer, pFile );
+
+                    sprintf( szBuffer, "DC %0.2f\n", (sCircle[sCont[dwC].dwIndex].fRad * 60.0f));
+					
+					fputs( szBuffer, pFile );
+                    break;
+
+                // Kreisbogen mit Koordinaten
+                // V D=-                                              Richtung (linksdrehend)
+                // V X=52:24:38 N 013:07:46 E                         Mittelpunkt
+                // DB 52:22:39 N 013:08:15 E , 52:24:33 N 013:11:02 E Koordinaten von-bis
+                case OA_TYP_ARC:
+                    if ( OA_ROT_DIR_LEFT == sCircle[sCont[dwC].dwIndex].bRotDir )
+				    {
+                        sprintf( szBuffer, "V D=-\n" );               
+					    fputs( szBuffer, pFile );     
+				    }
+					else 
+				    {
+                        sprintf( szBuffer, "V D=+\n" );               
+					    fputs( szBuffer, pFile );
+					}
+
+                    iOffset = sprintf( szBuffer, "V X=" );
+                    
+					iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLatM, FALSE, szBuffer + iOffset);               
+					iOffset += sprintf( szBuffer + iOffset, " " );
+                    iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLonM, TRUE, szBuffer + iOffset);                    
+     
+                    sprintf( szBuffer + iOffset, "\n" );               
+
+					fputs( szBuffer, pFile );
+
+                    iOffset = sprintf( szBuffer, "DB " );
+                    
+					iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLatB, FALSE, szBuffer + iOffset);               
+					iOffset += sprintf( szBuffer + iOffset, " " );
+                    iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLonB, TRUE, szBuffer + iOffset);                    
+     
+                    iOffset += sprintf( szBuffer + iOffset, " , " );
+
+					iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLatE, FALSE, szBuffer + iOffset);               
+					iOffset += sprintf( szBuffer + iOffset, " " );
+                    iOffset += LatLonFloatToStr(sCircle[sCont[dwC].dwIndex].fLonE, TRUE, szBuffer + iOffset);
+
+                    sprintf( szBuffer + iOffset, "\n" );
+					
+					fputs( szBuffer, pFile );               
+					break;
+
+                default:
+                    break;
+            }
+        }
+
+        sprintf( szBuffer, "\n" );                                             // Leerzeile
+        fputs( szBuffer, pFile );
     }
     
     fclose ( pFile );
@@ -905,7 +1059,7 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark, int iPenSize )
     HPEN hPen;
     DWORD dwE;
     BOOL  bStart = FALSE;
-    int      nXs = 0, nYs = 0;
+    int   nXs = 0, nYs = 0;
     char *sClass;
 
     sClass = pStrings + sArea[dwIndex].dwClass;
@@ -1081,6 +1235,7 @@ void ViewArea ( HDC hDC, DWORD dwIndex, DWORD dwElem, BOOL bMark, int iPenSize )
  *           3. OA_TYP_POINT -> ein Lufraum, Selektion des Punktes          *
  *           4. OA_TYP_ARC -> ein Luftraum, Selektion des Startpunkts       *
  *           5. OA_TYP_CIRCLE -> ein Luftraum                               *
+ *                                                                          *
  ****************************************************************************/
 void View ( HWND hWnd )
 {
