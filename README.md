@@ -11,13 +11,9 @@ schmidt.ronny()gmail.com
 
 Version 1.0.1 vom 28. Juni 2017
 
-Dieses Programm ist Freeware und darf frei ohne Erhebung weiterer Gebühren oder Kosten kopiert und/oder weitergegeben werden. Die Bereitstellung als Download im Internet oder anderen Foren ist ausdrücklich erwünscht.
-
-Diese Software unterliegt deutschem Recht. Es wird ausdrücklich darauf hingewiesen, dass diese Software nicht fehlerfrei ist und dass es somit immer zu Fehlern und Schäden aller hiermit in Verbindung stehender Systeme kommen kann. Jede Haftung für diese Software und deren Nutzung wird abgelehnt und mit Nutzung dieser Software anerkannt.
-
 Funktion:
 
-OAV dient einfach nur der einfachen graphischen Darstellung einer Datei im OpenAir Format. Ich habe das Programm mit verschiedenen OpenAir Dateien ausprobiert, welche im Internet zu finden sind. Ob alle Features unterstützt werden, kann ich nicht beurteilen!
+OAV dient einfach nur der einfachen graphischen Darstellung einer Datei im OpenAir Format. Wir haben das Programm mit verschiedenen OpenAir Dateien ausprobiert, welche im Internet zu finden sind. Ob alle Features unterstützt werden, können wir nicht beurteilen!
 
 Ideen: 
 - freies Plazieren von Linien, Kreisen oder Kreisbögen
